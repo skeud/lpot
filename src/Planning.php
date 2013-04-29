@@ -79,19 +79,22 @@ class Planning
             $date = strtotime($planningStartDate . ' +' . $i . ' day');
             if (in_array(date('N', $date), $this->daysToNotTaKeIntoAccount)) { continue; }
 
-            $this->planning[date('Y-m-d', $date)] = $this->getTeamMembersArraySkeleton();
+            $this->planning[date('Y-m-d', $date)]['teamMembers'] = $this->getTeamMembersArraySkeleton();
+            $this->planning[date('Y-m-d', $date)]['dateComments'] = '';
 
             foreach ($events as $event) {
                 foreach($this->teamMembers as $memberName) {
                     if ( ($this->isPersonalDayOff($event, $memberName) || $this->isLiipDayOff($event) || $this->isLiipInno($event)) &&
                         array_key_exists('date', $event['start']) &&
-                        $event['start']['date'] === date('Y-m-d', $date)
+                        $event['start']['date'] === date('Y-m-d', $date) &&
+                        $this->planning[date('Y-m-d', $date)]['teamMembers'][$memberName] > 0 // example: 1 Liip day off removed already. we don't want to remove it again if it is a person day off
                         ) {
-                            // example: 1 Liip day off removed already. we don't want to remove it again if it is a person day off
-                            if ($this->planning[date('Y-m-d', $date)][$memberName] > 0) {
-                                $this->planning[date('Y-m-d', $date)][$memberName] -= 1;
+                            $this->planning[date('Y-m-d', $date)]['teamMembers'][$memberName] -= 1;
+
+                            if ($this->isLiipDayOff($event) || $this->isLiipInno($event)) {
+                                $this->planning[date('Y-m-d', $date)]['dateComments'] = '(' . $event['summary'] . ')';
                             }
-                   }
+                    }
                 }
             }
         }
@@ -133,8 +136,8 @@ class Planning
         $totalMdsAvailable = 0;
 
         foreach($this->planning as $date => $teamAvailability) {
-            $output->writeln($date . ': <info>' . array_sum($teamAvailability) . ' MD</info>');
-            $totalMdsAvailable += array_sum($teamAvailability);
+            $output->writeln($date . ': <info>' . array_sum($teamAvailability['teamMembers']) . ' MD</info> ' . $teamAvailability['dateComments']);
+            $totalMdsAvailable += array_sum($teamAvailability['teamMembers']);
         }
 
         $output->writeln('----------------');
