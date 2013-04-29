@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+// console
+
+require_once 'vendor/autoload.php';
+require_once 'src/GetPlanningCommand.php';
+require_once 'src/Planning.php';
+
+use src\GetPlanningCommand;
+use src\Planning;
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+$application->add(new GetPlanningCommand);
+$application->run();

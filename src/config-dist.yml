@@ -1,0 +1,12 @@
+teamMembers: ['Thomas', 'Laurent'] # list all your team members
+offString: ' OFF' # personal day off pattern team agreed on
+teamOffice: 'LS' # liip office location shortname to find official company days off
+liipDayOffString: 'Feiertag' # liip day off pattern to find official company days off
+innoDayOffString: 'Innovation Day' # liip inno day pattern to find official innovation days
+daysToNotTaKeIntoAccount: ['5', '6', '7'] # example with your support day (friday) to not be included moreover to weekends
+teamCalId: 'yourTeamCalId' # to be found in Google Calendar => Settings
+liipInternEventsCalId: 'liipInternEventsCalId' # to be found in Google Calendar => Settings
+calClientId: 'calClientId' # to be found on wiki
+calClientSecret: 'calClientSecret' # to be found on wiki
+calRedirectUri: 'calRedirectUri' # to be found on wiki
+calToken: 'calToken' # to be found on wiki
