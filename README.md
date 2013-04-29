@@ -11,4 +11,4 @@
 * Get the next weeks (2 by default) team availability in MD (outputted on console by default)
     * `./console planning:get`
 * Get the next 4 weeks team availability in MD
-    * ./console planning:get --nbOfWeeks 4
+    * `./console planning:get --nbOfWeeks 4`
