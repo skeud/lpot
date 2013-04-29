@@ -1,4 +1,14 @@
-lpot
-====
+# Liip (unofficial) PO Toolbox (lpot)
 
-Liip (unofficial) PO Toolbox (lpot)
+## Installation
+* `cd path/where/you/want/lpot`
+* `git clone git@github.com:skeud/lpot.git && cd lpot && curl -sS https://getcomposer.org/installer | php && php composer.phar install`
+* `cp src/config-dist.yml src/config.yml`
+* Replace content of src/config.yml from Liip internal wiki
+* **That's it**
+
+## Usage
+* Get the next weeks (2 by default) team availability in MD (outputted on console by default)
+** `./console planning:get`
+* Get the next 4 weeks team availability in MD
+** ./console planning:get --nbOfWeeks 4
