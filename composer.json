@@ -1,0 +1,23 @@
+{
+    "require": {
+        "symfony/console": "2.3.*@dev",
+        "symfony/yaml": "2.1.*@dev",
+        "google/google-api-php-client": "0.6.2"
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "google/google-api-php-client",
+                "version": "0.6.2",
+                "dist": {
+                    "url": "http://google-api-php-client.googlecode.com/files/google-api-php-client-0.6.2.tar.gz",
+                    "type": "tar"
+                },
+                "autoload": {
+                    "classmap": ["src/"]
+                }
+            }
+        }
+    ]
+}
