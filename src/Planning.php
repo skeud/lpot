@@ -75,7 +75,7 @@ class Planning
             $events = array();
         }
 
-        for ($i = 0; $i <= $planningDiff->d; $i++) {
+        for ($i = 0; $i <= $planningDiff->days; $i++) {
             $date = strtotime($planningStartDate . ' +' . $i . ' day');
             if (in_array(date('N', $date), $this->daysToNotTaKeIntoAccount)) { continue; }
 
