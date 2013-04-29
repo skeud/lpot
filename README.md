@@ -4,7 +4,7 @@
 * `cd path/where/you/want/lpot`
 * `git clone git@github.com:skeud/lpot.git && cd lpot && curl -sS https://getcomposer.org/installer | php && php composer.phar install`
 * `cp src/config-dist.yml src/config.yml`
-* Replace content of src/config.yml from Liip internal wiki
+* Replace content of src/config.yml with your adapted config (examples here: http://liip.to/lpot_config_examples)
 * **That's it**
 
 ## Usage
