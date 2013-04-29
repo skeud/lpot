@@ -136,10 +136,16 @@ class Planning
         $totalMdsAvailable = 0;
 
         foreach($this->planning as $date => $teamAvailability) {
+            if (date('N', strtotime($date)) === '1') {
+                $output->writeln('');
+                $output->writeln('WK ' . date('W', strtotime($date)));
+            }
+
             $output->writeln($date . ': <info>' . array_sum($teamAvailability['teamMembers']) . ' MD</info> ' . $teamAvailability['dateComments']);
             $totalMdsAvailable += array_sum($teamAvailability['teamMembers']);
         }
 
+        $output->writeln('');
         $output->writeln('----------------');
         $output->writeln('Total:     <info>' . $totalMdsAvailable . ' MD</info>');
     }
