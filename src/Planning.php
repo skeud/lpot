@@ -13,11 +13,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Planning
 {
-    public function __construct($teamMembers, $teamOffice, $offString, $liipDayOffString, $innoDayOffString, $numberOfWeeksToPlan, $daysToNotTaKeIntoAccount, $teamCalId, $liipInternEventsCalId, $calClientId, $calClientSecret, $calRedirectUri, $calToken)
+    public function __construct($teamMembers, $teamOffice, $personalDayOffString, $liipDayOffString, $innoDayOffString, $numberOfWeeksToPlan, $daysToNotTaKeIntoAccount, $teamCalId, $liipInternEventsCalId, $calClientId, $calClientSecret, $calRedirectUri, $calToken)
     {
         $this->teamMembers = $teamMembers;
         $this->teamOffice = $teamOffice;
-        $this->personalOffString = $offString;
+        $this->personalOffString = $personalDayOffString;
         $this->liipDayOffString = $liipDayOffString;
         $this->innoDayOffString = $innoDayOffString;
         $this->numberOfWeeksToPlan = $numberOfWeeksToPlan;

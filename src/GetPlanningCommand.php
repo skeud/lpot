@@ -43,7 +43,7 @@ class GetPlanningCommand extends Command
         $planning = new Planning(
             $config['teamMembers'],
             $config['teamOffice'],
-            $config['offString'],
+            $config['personalDayOffString'],
             $config['liipDayOffString'],
             $config['innoDayOffString'],
             $input->getOption('nbOfWeeks'),

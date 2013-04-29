@@ -1,5 +1,5 @@
 teamMembers: ['Thomas', 'Laurent'] # list all your team members
-offString: ' OFF' # personal day off pattern team agreed on
+personalDayOffString: ' OFF' # personal day off pattern team agreed on
 teamOffice: 'LS' # liip office location shortname to find official company days off
 liipDayOffString: 'Feiertag' # liip day off pattern to find official company days off
 innoDayOffString: 'Innovation Day' # liip inno day pattern to find official innovation days
