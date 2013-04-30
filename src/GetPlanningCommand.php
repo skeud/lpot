@@ -17,13 +17,6 @@ class GetPlanningCommand extends Command
             ->setName('planning:get')
             ->setDescription('Get planning')
             ->addOption(
-                'outputType',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Set this option to define whether you want to output the planning in the console or in an HTML file (\'console\' by default)',
-                'console'
-            )
-            ->addOption(
                 'nbOfWeeks',
                 null,
                 InputOption::VALUE_OPTIONAL,
@@ -38,25 +31,27 @@ class GetPlanningCommand extends Command
         $output->writeln('Building planning...');
 
         $yaml = new Parser();
-        $config = $yaml->parse(file_get_contents(__DIR__ . '/config.yml'));
+        $planningConfig = $yaml->parse(file_get_contents(__DIR__ . '/config.yml'));
+        $planningConfig['nbOfWeeks'] = $input->getOption('nbOfWeeks');
 
-        $planning = new Planning(
-            $config['teamMembers'],
-            $config['billablePercentage'],
-            $config['teamOffice'],
-            $config['personalDayOffString'],
-            $config['liipDayOffString'],
-            $config['innoDayOffString'],
-            $input->getOption('nbOfWeeks'),
-            $config['daysToNotTaKeIntoAccount'],
-            $config['teamCalId'],
-            $config['liipInternEventsCalId'],
-            $config['calClientId'],
-            $config['calClientSecret'],
-            $config['calRedirectUri'],
-            $config['calToken']
-        );
-        $planning->buildPlanning();
-        $planning->render($output, $input->getOption('outputType'));
+        $planningService = new PlanningService($planningConfig);
+        $planning = $planningService->getTeamAvailabilities();
+
+        // render planning
+        $totalMdsAvailable = 0;
+
+        foreach($planning as $date => $teamAvailability) {
+            if (date('N', strtotime($date)) === '1') {
+                $output->writeln('');
+                $output->writeln('WK ' . date('W', strtotime($date)));
+            }
+
+            $output->writeln($date . ': <info>' . array_sum($teamAvailability['teamMembers']) . ' MD</info> ' . $teamAvailability['dateComments']);
+            $totalMdsAvailable += array_sum($teamAvailability['teamMembers']);
+        }
+
+        $output->writeln('');
+        $output->writeln('----------------');
+        $output->writeln('Total:     <info>' . $totalMdsAvailable . ' MD</info>');
     }
 }
