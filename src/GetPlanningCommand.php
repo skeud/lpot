@@ -42,6 +42,7 @@ class GetPlanningCommand extends Command
 
         $planning = new Planning(
             $config['teamMembers'],
+            $config['billablePercentage'],
             $config['teamOffice'],
             $config['personalDayOffString'],
             $config['liipDayOffString'],

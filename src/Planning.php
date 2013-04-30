@@ -13,9 +13,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Planning
 {
-    public function __construct($teamMembers, $teamOffice, $personalDayOffString, $liipDayOffString, $innoDayOffString, $numberOfWeeksToPlan, $daysToNotTaKeIntoAccount, $teamCalId, $liipInternEventsCalId, $calClientId, $calClientSecret, $calRedirectUri, $calToken)
+    public function __construct($teamMembers, $billablePercentage, $teamOffice, $personalDayOffString, $liipDayOffString, $innoDayOffString, $numberOfWeeksToPlan, $daysToNotTaKeIntoAccount, $teamCalId, $liipInternEventsCalId, $calClientId, $calClientSecret, $calRedirectUri, $calToken)
     {
         $this->teamMembers = $teamMembers;
+        $this->billablePercentage = $billablePercentage;
         $this->teamOffice = $teamOffice;
         $this->personalOffString = $personalDayOffString;
         $this->liipDayOffString = $liipDayOffString;
@@ -79,7 +80,7 @@ class Planning
             $date = strtotime($planningStartDate . ' +' . $i . ' day');
             if (in_array(date('N', $date), $this->daysToNotTaKeIntoAccount)) { continue; }
 
-            $this->planning[date('Y-m-d', $date)]['teamMembers'] = $this->getTeamMembersArraySkeleton();
+            $this->planning[date('Y-m-d', $date)]['teamMembers'] = $this->billablePercentage;
             $this->planning[date('Y-m-d', $date)]['dateComments'] = '';
 
             foreach ($events as $event) {
@@ -89,7 +90,7 @@ class Planning
                         $event['start']['date'] === date('Y-m-d', $date) &&
                         $this->planning[date('Y-m-d', $date)]['teamMembers'][$memberName] > 0 // example: 1 Liip day off removed already. we don't want to remove it again if it is a person day off
                         ) {
-                            $this->planning[date('Y-m-d', $date)]['teamMembers'][$memberName] -= 1;
+                            $this->planning[date('Y-m-d', $date)]['teamMembers'][$memberName] -= $this->billablePercentage[$memberName];
 
                             if ($this->isLiipDayOff($event) || $this->isLiipInno($event)) {
                                 $this->planning[date('Y-m-d', $date)]['dateComments'] = '(' . $event['summary'] . ')';
@@ -98,11 +99,6 @@ class Planning
                 }
             }
         }
-    }
-
-    protected function getTeamMembersArraySkeleton()
-    {
-        return array_fill_keys(array_values($this->teamMembers), 1);
     }
 
     protected function isPersonalDayOff($event, $memberName)

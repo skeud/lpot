@@ -1,4 +1,7 @@
 teamMembers: ['Thomas', 'Laurent'] # list all your team members
+billablePercentage:
+    Thomas: 0.8
+    Laurent: 0.5
 personalDayOffString: ' OFF' # personal day off pattern team agreed on
 teamOffice: 'LS' # liip office location shortname to find official company days off
 liipDayOffString: 'Feiertag' # liip day off pattern to find official company days off
