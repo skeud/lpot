@@ -8,7 +8,10 @@
 * **That's it**
 
 ## Usage
-* Get the next weeks (2 by default) team availability in MD
-    * `./console planning:get`
+* Get the current week team availability in MD
+    * `./console planning:availability`
 * Get the next 4 weeks team availability in MD
-    * `./console planning:get --nbOfWeeks 4`
+    * `./console planning:availability --startDate=2013-05-06 --endDate=2013-05-19`
+
+## Config example
+* http://liip.to/lpot_config_examples
