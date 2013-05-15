@@ -47,7 +47,7 @@ class PlanningService
         $planning = array();
 
         $planningStartDate = date(DATE_RFC3339, strtotime('00:00:00', strtotime($this->config['startDate'])));
-        $planningEndDate = date(DATE_RFC3339, strtotime('00:00:00', strtotime($this->config['endDate'])));
+        $planningEndDate = date(DATE_RFC3339, strtotime('23:59:59', strtotime($this->config['endDate'])));
         $planningDiff = date_diff(new \DateTime($planningStartDate), new \DateTime($planningEndDate), true);
 
         $cal = $this->getCalendarAccess();
