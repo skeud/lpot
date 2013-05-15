@@ -74,8 +74,8 @@ class PlanningService
             foreach ($events as $event) {
                 foreach($this->config['teamMembers'] as $memberName) {
                     if ( ($this->isPersonalDayOff($event, $memberName) || $this->isLiipDayOff($event) || $this->isLiipInno($event)) &&
-                        array_key_exists('date', $event['start']) &&
-                        $event['start']['date'] === date('Y-m-d', $date) &&
+                        array_key_exists('date', $event['end']) &&
+                        $event['end']['date'] !== date('Y-m-d', $date) &&
                         $planning[date('Y-m-d', $date)]['teamMembers'][$memberName] > 0 // example: 1 Liip day off removed already. we don't want to remove it again if it is a person day off
                         ) {
                             $planning[date('Y-m-d', $date)]['teamMembers'][$memberName] -= $this->config['billablePercentage'][$memberName];
