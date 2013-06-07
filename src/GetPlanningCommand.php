@@ -64,7 +64,7 @@ class GetPlanningCommand extends Command
         }
 
         $output->writeln('');
-        $output->writeln('----------------');
+        $output->writeln('------------------');
         $output->writeln('Total:     <info>' . $totalMdsAvailable . ' MD</info>');
     }
 
