@@ -1,13 +1,15 @@
-teamMembers: ['Thomas', 'Laurent'] # list all your team members
-billablePercentage:
-    Thomas: 0.8
-    Laurent: 0.5
-personalDayOffString: ' OFF' # personal day off pattern team agreed on
+team:
+    Thomas:
+        email: 'thomas.botton@liip.ch'
+        billablePercentage: 0.8
+    Laurent:
+        email: 'laurent.prodon@liip.ch'
+        billablePercentage: 0.5
 teamOffice: 'LS' # liip office location shortname to find official company days off
 liipDayOffString: 'Feiertag' # liip day off pattern to find official company days off
 innoDayOffString: 'Innovation Day' # liip inno day pattern to find official innovation days
 daysToNotTaKeIntoAccount: ['5', '6', '7'] # example with your support day (friday) to not be included moreover to weekends
-teamCalId: 'yourTeamCalId' # to be found in Google Calendar => Settings
+liipAbsenceCalId: 'liipAbsenceCalId' # to be found in Google Calendar => Settings
 liipInternEventsCalId: 'liipInternEventsCalId' # to be found in Google Calendar => Settings
 calClientId: 'calClientId' # to be found on wiki
 calClientSecret: 'calClientSecret' # to be found on wiki

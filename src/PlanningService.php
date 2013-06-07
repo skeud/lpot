@@ -51,14 +51,14 @@ class PlanningService
         $planningDiff = date_diff(new \DateTime($planningStartDate), new \DateTime($planningEndDate), true);
 
         $cal = $this->getCalendarAccess();
-        $teamEvents = $cal->events->listEvents($this->config['teamCalId'], array('timeMin' => $planningStartDate, 'timeMax' => $planningEndDate, 'singleEvents' => true));
+        $liipAbsences = $cal->events->listEvents($this->config['liipAbsenceCalId'], array('timeMin' => $planningStartDate, 'timeMax' => $planningEndDate, 'singleEvents' => true));
         $liipEvents = $cal->events->listEvents($this->config['liipInternEventsCalId'], array('timeMin' => $planningStartDate, 'timeMax' => $planningEndDate, 'singleEvents' => true));
 
-        if (array_key_exists('items', $teamEvents) && array_key_exists('items', $liipEvents)) {
-            $events = array_merge($teamEvents['items'], $liipEvents['items']);
-        } elseif (array_key_exists('items', $teamEvents)) {
-            $events = $teamEvents['items'];
-        } elseif (array_key_exists('items', $liipEvents)) {
+        if (array_key_exists('items', $liipAbsences) && array_key_exists('items', $liipEvents)) {
+            $events = array_merge($liipAbsences['items'], $liipEvents['items']);
+        } elseif (array_key_exists('items', $liipAbsences)) {
+            $events = $liipAbsences['items'];
+        } elseif (array_key_exists('items', $liipAbsences)) {
             $events = $liipEvents['items'];
         } else {
             $events = array();
@@ -68,20 +68,30 @@ class PlanningService
             $date = strtotime($planningStartDate . ' +' . $i . ' day');
             if (in_array(date('N', $date), $this->config['daysToNotTaKeIntoAccount'])) { continue; }
 
-            $planning[date('Y-m-d', $date)]['teamMembers'] = $this->config['billablePercentage'];
+            // prepare array template for every date so to decrease its number while finding days off in calendar
+            // ex: team > Dorian = 0.8
+            //          > Laurent = 0.5
+            //          > Germain = 0.5
+            $billablePercentages = $this->config['team'];
+            foreach($billablePercentages as $memberName => $memberInfos) {
+                $billablePercentages[$memberName] = $memberInfos['billablePercentage'];
+            }
+            $planning[date('Y-m-d', $date)]['team'] = $billablePercentages;
+
+            // date comment example: "FR/LS/ZH Feiertag: Nationalfeiertag / Fête Nationale"
+            // goal is to help identify at a glance why date availabilities = 0 MD
             $planning[date('Y-m-d', $date)]['dateComments'] = '';
 
             foreach ($events as $event) {
-                foreach($this->config['teamMembers'] as $memberName) {
-                    if ( ($this->isPersonalDayOff($event, $memberName) || $this->isLiipDayOff($event) || $this->isLiipInno($event)) &&
+                foreach(array_keys($this->config['team']) as $key => $memberName) {
+                    if ( ($this->isPersonalDayOff($event, $this->config['team'][$memberName]['email']) || $this->isLiipDayOff($event) || $this->isLiipInno($event)) &&
                         array_key_exists('date', $event['start']) &&
                         array_key_exists('date', $event['end']) &&
                         date('Y-m-d', $date) >= $event['start']['date'] &&
                         date('Y-m-d', $date) < $event['end']['date'] &&
-                        $planning[date('Y-m-d', $date)]['teamMembers'][$memberName] > 0 // example: 1 Liip day off removed already. we don't want to remove it again if it is a person day off
+                        $planning[date('Y-m-d', $date)]['team'][$memberName] > 0 // example: 1 Liip day off removed already. we don't want to remove it again if it is a person day off
                         ) {
-                            $planning[date('Y-m-d', $date)]['teamMembers'][$memberName] -= $this->config['billablePercentage'][$memberName];
-
+                            $planning[date('Y-m-d', $date)]['team'][$memberName] -= $this->config['team'][$memberName]['billablePercentage'];
                             if ($this->isLiipDayOff($event) || $this->isLiipInno($event)) {
                                 $planning[date('Y-m-d', $date)]['dateComments'] = '(' . $event['summary'] . ')';
                             }
@@ -93,9 +103,12 @@ class PlanningService
         return $planning;
     }
 
-    protected function isPersonalDayOff($event, $memberName)
+    protected function isPersonalDayOff($event, $teamMemberEmail)
     {
-        return strpos($event['summary'], $memberName . $this->config['personalDayOffString']) !== false;
+        return ($event['creator']['email'] === $teamMemberEmail &&
+                ($event['organizer']['email'] == $this->config['liipAbsenceCalId'] || // to prevent entries done by SSM in Events calendar
+                 $this->hasAttendee($event, $this->config['liipAbsenceCalId']))
+        );
     }
 
     protected function isLiipDayOff($event)
@@ -106,5 +119,20 @@ class PlanningService
     protected function isLiipInno($event)
     {
         return strpos($event['summary'], $this->config['innoDayOffString']) !== false;
+    }
+
+    protected function hasAttendee($event, $attendee)
+    {
+        if (!isset($event['attendees'])) {
+            return false;
+        }
+
+        foreach ($event['attendees'] as $eventAttendee) {
+            if ($eventAttendee['email'] === $attendee) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
