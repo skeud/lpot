@@ -12,6 +12,8 @@
     * `./console planning:availability`
 * Get the next 4 weeks team availability in MD
     * `./console planning:availability --startDate=2013-05-06 --endDate=2013-05-19`
+* Command line output example
+![lpot output example](/images/lpot_example.png)
 
 ## Config example
 * http://liip.to/lpot_config_examples
