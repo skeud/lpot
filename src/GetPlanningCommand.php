@@ -59,7 +59,7 @@ class GetPlanningCommand extends Command
                 $output->writeln('WK ' . date('W', strtotime($date)));
             }
 
-            $output->writeln($date . ': <info>' . array_sum($teamAvailability['team']) . ' MD</info> ' . $teamAvailability['dateComments']);
+            $output->writeln($date . ': <info>' . number_format(array_sum($teamAvailability['team']), 1) . ' MD</info> ' . $teamAvailability['dateComments']);
             $totalMdsAvailable += array_sum($teamAvailability['team']);
         }
 
