@@ -52,19 +52,30 @@ class GetPlanningCommand extends Command
 
         // render planning
         $totalMdsAvailable = 0;
+        $weekSubtotal = null;
 
         foreach($planning as $date => $teamAvailability) {
             if (date('N', strtotime($date)) === '1') {
+                if (!is_null($weekSubtotal)) {
+                    $output->writeln('------------------');
+                    $output->writeln('Subtotal ' . ($weekSubtotal < 10 ? ' ' : '')  . '  <info>' . $weekSubtotal . ' MD</info>');
+                    $weekSubtotal = 0;
+                }
+
                 $output->writeln('');
-                $output->writeln('WK ' . date('W', strtotime($date)));
+                $output->writeln('<fg=black;options=underscore>WK ' . date('W', strtotime($date)) . '</fg=black;options=underscore>');
             }
 
             $output->writeln($date . ': <info>' . number_format(array_sum($teamAvailability['team']), 1) . ' MD</info> ' . $teamAvailability['dateComments']);
             $totalMdsAvailable += array_sum($teamAvailability['team']);
+
+            $weekSubtotal += array_sum($teamAvailability['team']);
         }
 
-        $output->writeln('');
         $output->writeln('------------------');
+        $output->writeln('Subtotal ' . ($weekSubtotal < 10 ? ' ' : '')  . '  <info>' . $weekSubtotal . ' MD</info>');
+        $output->writeln('');
+        $output->writeln('<fg=black;options=underscore>                  </fg=black;options=underscore>');
         $output->writeln('Total:     <info>' . $totalMdsAvailable . ' MD</info>');
     }
 
