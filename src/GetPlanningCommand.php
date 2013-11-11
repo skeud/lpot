@@ -66,7 +66,9 @@ class GetPlanningCommand extends Command
                 $output->writeln('<fg=black;options=underscore>WK ' . date('W', strtotime($date)) . '</fg=black;options=underscore>');
             }
 
-            $output->writeln($date . ': <info>' . number_format(array_sum($teamAvailability['team']), 1) . ' MD</info> ' . $teamAvailability['dateComments']);
+            if (number_format(array_sum($teamAvailability['team']), 1) !== '0.0') {
+                $output->writeln($date . ': <info>' . number_format(array_sum($teamAvailability['team']), 1) . ' MD</info> ' . $teamAvailability['dateComments']);
+            }
             $totalMdsAvailable += array_sum($teamAvailability['team']);
 
             $weekSubtotal += array_sum($teamAvailability['team']);

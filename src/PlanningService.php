@@ -66,7 +66,11 @@ class PlanningService
 
         for ($i = 0; $i <= $planningDiff->days; $i++) {
             $date = strtotime($planningStartDate . ' +' . $i . ' day');
-            if (in_array(date('N', $date), $this->config['daysToNotTaKeIntoAccount'])) { continue; }
+            if (in_array(date('N', $date), $this->config['daysToNotTaKeIntoAccount'])) {
+                $planning[date('Y-m-d', $date)]['team'] = array();
+                $planning[date('Y-m-d', $date)]['dateComments'] = '';
+                continue;
+            }
 
             // prepare array template for every date so to decrease its number while finding days off in calendar
             // ex: team > Dorian = 0.8
